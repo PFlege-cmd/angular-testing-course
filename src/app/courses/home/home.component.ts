@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
 
+      console.log('Called ngOnInit()');
+
       this.reloadCourses();
 
     }
@@ -32,9 +34,10 @@ export class HomeComponent implements OnInit {
       const courses$ = this.coursesService.findAllCourses();
 
       this.beginnerCourses$ = this.filterByCategory(courses$, 'BEGINNER');
+      this.beginnerCourses$.subscribe(course => console.log(course))
 
       this.advancedCourses$ = this.filterByCategory(courses$, 'ADVANCED');
-
+      this.advancedCourses$.subscribe(course => console.log(course))
     }
 
     filterByCategory(courses$: Observable<Course[]>, category:string) {

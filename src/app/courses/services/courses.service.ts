@@ -3,7 +3,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {Lesson} from "../model/lesson";
 import {Course} from '../model/course';
 
@@ -20,9 +20,11 @@ export class CoursesService {
     }
 
     findAllCourses(): Observable<Course[]> {
+      console.log('In find all courses')
         return this.http.get('/api/courses')
             .pipe(
-                map(res => res['payload'])
+                map(res => res['payload']),
+                tap(res => console.log(res))
             );
     }
 

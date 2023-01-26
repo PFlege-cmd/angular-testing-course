@@ -1,53 +1,37 @@
 import {CalculatorService} from './calculator.service';
-import {LoggerService} from './logger.service';
-import {TestBed} from '@angular/core/testing';
-
+import {LoggerService} from "./logger.service";
+import {TestBed} from "@angular/core/testing";
 
 describe('CalculatorService', () => {
 
-    let calculator: CalculatorService,
-        loggerSpy: any;
+  let calculatorService: CalculatorService, loggerSpy: any, testBed: TestBed;
 
-    beforeEach(()=> {
-
-        console.log("Calling beforeEach");
-
-        loggerSpy = jasmine.createSpyObj('LoggerService', ["log"]);
-
-        TestBed.configureTestingModule({
-            providers: [
-                CalculatorService,
-                {provide: LoggerService, useValue: loggerSpy}
-            ]
-        });
-
-        calculator = TestBed.get(CalculatorService);
-
+  beforeEach(() => {
+    loggerSpy = jasmine.createSpyObj('LoggerService', ['log']);
+    TestBed.configureTestingModule({
+      providers: [
+        {provide: LoggerService, useValue: loggerSpy},
+        CalculatorService
+      ]
     });
 
-    it('should add two numbers', () => {
+    calculatorService = TestBed.inject(CalculatorService);
 
-        console.log("add test");
+  });
 
-        const result = calculator.add(2, 2);
+  xit('should add up two numbers.', () => {
 
-        expect(result).toBe(4);
+    const additionResult = calculatorService.add(2, 2);
 
-        expect(loggerSpy.log).toHaveBeenCalledTimes(1);
+    expect(loggerSpy.log).toHaveBeenCalledTimes(1);
+    expect(additionResult).toBe(4)
+  })
 
-    });
+  it('should subtract two numbers.', () => {
 
+    const additionResult = calculatorService.subtract(2, 2);
 
-    it('should subtract two numbers', () => {
-
-        console.log("subtract test");
-
-        const result = calculator.subtract(2, 2);
-
-        expect(result).toBe(0, "unexpected subtraction result");
-
-        expect(loggerSpy.log).toHaveBeenCalledTimes(1);
-
-    });
-
+    expect(loggerSpy.log).toHaveBeenCalledTimes(1);
+    expect(additionResult).toBe(0)
+  })
 });

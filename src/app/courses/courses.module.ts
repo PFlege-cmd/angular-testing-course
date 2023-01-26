@@ -28,6 +28,7 @@ import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CoursesService} from './services/courses.service';
 import {CourseResolver} from './services/course.resolver';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import {CourseResolver} from './services/course.resolver';
     ],
     imports: [
         CommonModule,
+        HttpClientTestingModule,
         MatMenuModule,
         MatButtonModule,
         MatToolbarModule,

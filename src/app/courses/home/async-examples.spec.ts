@@ -1,137 +1,102 @@
 import {fakeAsync, flush, flushMicrotasks, tick} from '@angular/core/testing';
-import {of} from 'rxjs';
-import {delay} from 'rxjs/operators';
+import {of} from "rxjs";
+import {delay} from "rxjs/operators";
+
 
 
 describe('Async Testing Examples', () => {
 
-    it('Asynchronous test example with Jasmine done()', (done: DoneFn) => {
+    it('Asynchronous test example with Jasmine done()', (done) => {
 
-        let test = false;
+      let flag = false;
 
-        setTimeout(() => {
+      setTimeout(()=>{
+        flag = true;
 
-            console.log('running assertions');
+        console.log('Am in timeout-callback right now!');
 
-            test = true;
+        expect(flag).toBe(true);
 
-            expect(test).toBeTruthy();
-
-            done();
-
-        }, 1000);
-
+        done();
+      }, 500)
     });
 
 
     it('Asynchronous test example - setTimeout()', fakeAsync(() => {
 
-        let test = false;
+      let test = false;
 
-        setTimeout(() => {
-        });
-
-        setTimeout(() => {
-
-            console.log('running assertions setTimeout()');
-
-            test = true;
-
-        }, 1000);
-
-        flush();
-
-        expect(test).toBeTruthy();
-
+      setTimeout(() => {
+        console.log('In async timeout');
+        test = true;
+      }, 100000000);
+      flush();
+      expect(test).toBe(true)
     }));
 
 
     it('Asynchronous test example - plain Promise', fakeAsync(() => {
+      let test = false;
 
-        let test = false;
+      console.log('Outside promise');
 
-        console.log('Creating promise');
+      Promise.resolve().then(()=>{
+        console.log('Inside promise')
+        test = true;
+      })
 
-        Promise.resolve().then(() => {
+      flushMicrotasks();
 
-            console.log('Promise first then() evaluated successfully');
-
-            return Promise.resolve();
-        })
-        .then(() => {
-
-            console.log('Promise second then() evaluated successfully');
-
-            test = true;
-
-        });
-
-        flushMicrotasks();
-
-        console.log('Running test assertions');
-
-        expect(test).toBeTruthy();
-
+      expect(test).toBe(true);
     }));
 
 
     it('Asynchronous test example - Promises + setTimeout()', fakeAsync(() => {
 
-        let counter = 0;
+    let counter = 0;
 
-        Promise.resolve()
-            .then(() => {
+    console.log('Outside async - operations');
 
-               counter+=10;
+    Promise.resolve().then(() => {
 
-               setTimeout(() => {
+      console.log('In Promise');
 
-                   counter += 1;
+      counter += 10;
 
-               }, 1000);
+      setTimeout(() => {
+          console.log('In timeout');
+          counter += 1;
+        }, 1000);
+      });
 
-            });
+      expect(counter).toBe(0);
 
-        expect(counter).toBe(0);
+      flushMicrotasks()
 
-        flushMicrotasks();
+      expect(counter).toBe(10);
 
-        expect(counter).toBe(10);
+      tick(500);
 
-        tick(500);
+      expect(counter).toBe(10);
 
-        expect(counter).toBe(10);
+      tick(500);
 
-        tick(500);
-
-        expect(counter).toBe(11);
-
+      expect(counter).toBe(11);
     }));
 
     it('Asynchronous test example - Observables', fakeAsync(() => {
-
         let test = false;
-
-        console.log('Creating Observable');
 
         const test$ = of(test).pipe(delay(1000));
 
         test$.subscribe(() => {
-
-            test = true;
-
+          test = true;
         });
 
         tick(1000);
 
-        console.log('Running test assertions');
-
         expect(test).toBe(true);
-
-
     }));
-
-
 });
 
 
